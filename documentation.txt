@@ -1,0 +1,68 @@
+--DOCUMENTATION--
+
+
+PROGRAMMING LANGUAGE
+-PYTHON (PROG LANG.)
+-DJANGO (PYTHON FRAMEWORK)
+-HTML, CSS (SCRIPTING LANGUAGE)
+
+DATABASING
+-DJANGO (SQLITE)
+    -ORM(OBJECT RELATED MAPPING)
+
+-MYSQL
+    -RDBMS(RELATIONAL DATABASE MANAGEMENT SYS)
+
+READ ME-
+1. EXTRACT ZIP FILE
+2. INSTALL PYTHON : https://www.python.org/downloads/
+2.5. CHECK IF PYTHON IS CORRECTLY INSTALLED
+    -OPEN CMD
+    - PYTHON.EXE --VERSION
+3. CHECK IF PIP IS INSTALLED
+    -OPEN CMD
+    -pip list
+    -IF NOT INSTALLED: curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+4. DOWNLOAD ALL REQUIREMENTS FOR THE PROJECT
+    - OPEN CMD IN THE PROJECT DIRECTORY
+    - pip install -r requirements.txt
+5. GO TO THE PROJECT DIRECTORY
+    - OPEN CMD 
+    - CHANGE PATH : cd path (e.g. cd /project/museum)
+    - GO TO SCRIPTS
+    - cd Scripts
+    - type, activate.bat
+    - FOR VIRTUAL ENVIRONMENT
+6. OPEN CMD IN PROJECT DIRECTORY
+    - GO BACK TO STEP 5
+    - project/museum/museum_files
+    - media, museum_files, pdfs, db.sqlite3, manage.py
+    - IN CMD: py manage.py runserver
+    EXPECTED OUTPUT:
+
+    Watching for file changes with StatReloader
+    Performing system checks...
+
+    System check identified no issues (0 silenced).
+    December 05, 2023 - 17:29:41
+    Django version 4.2.7, using settings 'museum_files.settings'
+    Starting development server at http://127.0.0.1:8000/
+    Quit the server with CTRL-BREAK.
+
+-CREDENTIALS
+pass: adminpass
+
+--TAKE NOTE--
+-PATHS
+
+    path('', views.pdf_files, name='pdfs'), #FOR VIEWING THE LIST OF FILES
+    path('admin_page/add/', views.add_object, name='add_object'), #ADMIN - ADD FILE
+    path('admin_page/update/<int:pk>/', views.update_object, name='update_object'), #ADMIN - UPDATE FILE
+    path('admin_page/delete/<int:pk>/', views.delete_object, name='delete_object'), #ADMIN - DELETE FILE
+    path('admin_page', views.display_admin, name='admin'), #DISPLAY ADMIN PAGE
+    path('admin_landing', views.login_admin, name='admin_landing'), #DISPLAY ADMIN LOGIN
+    path('logout/', views.logout_view, name='logout'), #PATH FOR DEAUTHING USER
+    
+    path('museum_pdfs/pdf_list', views.index, name='main_pdfs'), #INDEX PAGE (TYPEWRITER EFFECT)
+    path('download/<int:pk>/', views.download_file, name='download_file'),#FUNCTION FOR DOWNLOADING FILES
+ 

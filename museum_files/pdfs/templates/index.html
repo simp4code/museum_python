@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Museum</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: url('media/images/museum.gif') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #typewriter-text {
+      overflow: hidden;
+      white-space: pre-line;
+      border-right: 1px solid #fff;
+      color: #fff;
+      font-size: 25px;
+      animation: typing 3s steps(40, end);
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    @keyframes typing {
+      from {
+        width: 0;
+      }
+
+      to {
+        width: 100%;
+      }
+    }
+
+    #continue-btn {
+      display: none;
+    }
+
+    .btn_enter {
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      color: #a3a3a3;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .btn_enter:hover {
+      background-color: #a3a3a3;
+      color: #fff;
+    }
+
+    a {
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <center>
+    <div id="typewriter-text">
+    </div>
+  </center>
+
+  <a id="continue-btn" class="btn_enter" href="{% url 'main_pdfs' %}">Enter</a>
+
+  <script>
+    const textLines = [
+      "Welcome to our Digital Museum! ",
+      "Step into a world of wonder and discovery as you embark on a journey through history, art, and culture. ",
+      "Enjoy your visit, and may the exhibits ignite your curiosity and imagination! "
+    ];
+
+    let currentLine = 0;
+    let currentChar = 0;
+    const speed = 50;
+    function typeWriter() {
+      if (currentLine < textLines.length) {
+        const line = textLines[currentLine] + "\n";
+        document.getElementById('typewriter-text').innerHTML += line.charAt(currentChar);
+        currentChar++;
+
+        if (currentChar === line.length) {
+          currentChar = 0;
+          currentLine++;
+
+          if (currentLine === textLines.length) {
+            document.getElementById('continue-btn').style.display = 'block';
+          }
+        }
+
+        setTimeout(typeWriter, speed);
+      }
+    }
+
+    typeWriter();
+  </script>
+
+</body>
+
+</html>

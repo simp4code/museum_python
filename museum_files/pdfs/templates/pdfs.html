@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Museum: Studies</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <style>
+        body {
+            background: url('/media/images/museum_bg.jpg') no-repeat center center fixed;
+        }
+
+        p {
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        /* Style for individual cards */
+        .card {
+            width: 250px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            box-shadow: 0 3px 10px rgb(0 0 0 / 1);
+            cursor: pointer;
+            width: calc(22.22% - 20px);
+            box-sizing: border-box;
+
+        }
+
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+
+        .card-content {
+            padding: 16px;
+            background-color: #fff;
+            font-family: 'Garamond';
+        }
+
+        .card-content h2 {
+            color: #000;
+            font-family: 'Helvetica', sans-serif;
+            font-size: 18px;
+        }
+
+        .dlbtn {
+            background-color: #3F4D63;
+            border-radius: 5px;
+            color: #fff;
+            width: 100%;
+            font-family: 'Helvetica', sans-serif;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 600px;
+        }
+
+        /* Style for the close button */
+        .close {
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'back_index' %}">Digital Museum</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'back' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'pdf_gallery' %}" active>Studies</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about_us' %}">About</a>
+                    </li>
+                    <li>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="text" id="searchInput" oninput="searchCards()" placeholder="Search...">
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    {% if file_count == 0 %}
+    <p style="color:#fff;font-size: 24px;">No file available.</p>
+    {% else %}
+
+    <ul class="card-container">
+        {% for x in pdf_files %}
+        <!-- Card -->
+        <div class="card">
+            <div class="header">
+                <img src="{{ x.file_image.url }}" width="350px" height="400px">
+            </div>
+            <div class="card-content">
+                <h2 style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#myModal"
+                    onclick="populateModal('{{ x.file_name|escapejs }}', '{{ x.file_abstract|escapejs }}')">
+                    {{ x.file_name }}
+                </h2>
+
+                <center>
+                    <a href="{% url 'download_file' pk=x.file_id %}" download>
+                        <img src="/media/images/download_icon.png" style="height:50px; width:50px;">
+                    </a>
+                </center>
+
+            </div>
+        </div>
+        {% endfor %}
+    </ul>
+
+    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">File Information</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h2 id="modalFileName"></h2>
+                    <p id="modalFileAbstract"></p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function populateModal(fileName, fileAbstract) {
+            var modalFileName = document.getElementById('modalFileName');
+            var modalFileAbstract = document.getElementById('modalFileAbstract');
+
+            modalFileName.textContent = decodeURIComponent(fileName);
+            modalFileAbstract.textContent = decodeURIComponent(fileAbstract);
+        }
+        function downloadFile(index) {
+            var downloadLink = document.getElementById('downloadButton' + index);
+            downloadLink.click();
+        }
+        function searchCards() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+
+            cards.forEach(card => {
+                const cardName = card.querySelector('h2').innerText.toLowerCase();
+                const display = cardName.includes(input) || input === '' ? 'block' : 'none';
+                card.style.display = display;
+            });
+        }
+
+    </script>
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+    {% endif %}
+</body>
+
+</html>
